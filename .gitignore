@@ -1,11 +1,23 @@
-*.d
+# General build artifacts
 *.o
+*.d
+*.a
+*.so
+*.dylib
+*.exe
+*.bin
+*.log
+*.tmp
+
+# Specific SubZero build outputs
 /libtrading-config
 /libtrading.a
 /libtrading.dylib
 /libtrading.so
 /tags
 /test-trade
+
+# Generated tools and test binaries
 /tools/cert/micex/forts
 /tools/fast/fast_client
 /tools/fast/fast_server
@@ -22,10 +34,12 @@
 /tools/test/protocol/boe/*.bin
 /tools/test/test-runner.c
 /tools/test/test-suite.h
+
+# Generated version and probe files
 /LIBTRADING-VERSION-FILE
 /include/libtrading/probes.h
 
-# Generated FIX dialects:
+# Generated FIX dialects
 /include/libtrading/proto/iex_fix.h
 /include/libtrading/proto/kcg_hotspot_fix.h
 /include/libtrading/proto/mbt_fix.h
@@ -38,3 +52,34 @@
 /lib/proto/micex_fix.c
 /lib/proto/cme_globex_fix.c
 /lib/proto/ice_os_fix.c
+
+# CMake-specific files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+/build/
+
+# Docker-specific files
+docker-compose.override.yml
+*.env
+
+# IDE/editor-related files
+.vscode/
+.idea/
+*.iml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Miscellaneous
+*.bak
+*.~*
+
+# Generated files
+lib/proto/*.c
+include/libtrading/proto/*.h
+tools/test/test-runner.c
+tools/test/test-suite.h
