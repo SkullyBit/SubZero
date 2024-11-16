@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  subzero:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/SubZero
+    working_dir: /usr/src/SubZero
+    command: /bin/bash
