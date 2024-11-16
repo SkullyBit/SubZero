@@ -1,5 +1,10 @@
 #!/bin/sh
+# tools/gen-version-file
 
-version=$(git describe --tags --long)
+VERSION=$(git describe --tags --dirty --always 2>/dev/null)
 
-echo "#define LIBTRADING_VERSION \"$version\"" > LIBTRADING-VERSION-FILE
+if [ -z "$VERSION" ]; then
+    VERSION="v1.0.0"  # Default version
+fi
+
+echo "#define LIBTRADING_VERSION \"$VERSION\""
