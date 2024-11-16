@@ -7,6 +7,8 @@
 
 static const char *program;
 
+#define LIBTRADING_VERSION "v1.0.0"
+
 static const char *usage_fmt =
 "Usage: %s <option>\n"
 "\n"
