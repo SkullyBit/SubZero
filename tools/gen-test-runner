@@ -1,14 +1,17 @@
 #!/bin/sh
 
-echo "#include \"test-suite.h\""
+# Output the inclusion of the test suite header
+echo '#include "test-suite.h"'
 
-echo \
-'
+# Output the main function opening
+echo '
 int main(int argc, char *argv[])
 {'
-grep -h "^void test_" $1|sed -e "s/^void //g"|sed -e "s/(void)/();/g"
 
-echo \
-'
-	return 0;
+# Generate test calls from function declarations in the input file
+grep -h "^void test_" "$1" | sed -e "s/^void //g" -e "s/(void)/();/g"
+
+# Output the main function closing
+echo '
+    return 0;
 }'
