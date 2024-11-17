@@ -193,7 +193,7 @@ install(FILES ${LIB_HEADERS} DESTINATION include/libtrading)
 # Helper function for adding tool executables
 function(add_tool_executable name)
     add_executable(${name} ${ARGN})
-    target_link_libraries(${name} trading_static ${EXTRA_LIBS})
+    target_link_libraries(${name} trading_static ${EXTRA_LIBS} m)
     target_include_directories(${name} PRIVATE ${PROJECT_SOURCE_DIR}/include)
     install(TARGETS ${name} RUNTIME DESTINATION bin)
 endfunction()
