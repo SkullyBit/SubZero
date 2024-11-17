@@ -2,11 +2,16 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name and version
-project(SubZero VERSION 1.0 LANGUAGES C)
+project(SubZero VERSION 1.0 LANGUAGES C CXX) # Explicitly enable both C and C++
 
 # Set the C standard
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Set the C++ standard
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF) # Ensure strict adherence to the C++ standard
 
 # Define build options
 option(WERROR "Enable -Werror compiler flag" OFF)
@@ -131,7 +136,6 @@ set(MANUAL_PROTO_SOURCES
     lib/proto/boe_message.c
     lib/proto/mbt_quote_message.c
     lib/proto/xdp_message.c
-    # Add any other necessary protocol source files
 )
 
 set(PROTO_SOURCES
@@ -155,7 +159,6 @@ set(LIB_SOURCES
     ${PROBE_SOURCES}
 )
 
-# Ensure source lists are not empty
 if(NOT LIB_SOURCES)
     message(FATAL_ERROR "No source files found in library sources!")
 endif()
@@ -182,13 +185,32 @@ install(TARGETS trading_static trading_shared
     ARCHIVE DESTINATION lib
 )
 
-# Install headers
-file(GLOB LIB_HEADERS
-    "${PROJECT_SOURCE_DIR}/include/*.h"
-    "${PROJECT_SOURCE_DIR}/include/libtrading/*.h"
-    ${PROTO_HEADERS}
+install(FILES ${PROTO_HEADERS} DESTINATION include/libtrading)
+
+# Add Google Test
+include(FetchContent)
+
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
 )
-install(FILES ${LIB_HEADERS} DESTINATION include/libtrading)
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+# Add unit tests
+add_executable(unit_tests
+    tests/unit_tests.cpp
+)
+
+target_link_libraries(unit_tests
+    gtest_main
+    trading_static
+)
+
+add_test(NAME UnitTests COMMAND unit_tests)
 
 # Helper function for adding tool executables
 function(add_tool_executable name)

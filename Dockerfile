@@ -1,16 +1,18 @@
 # Use a stable base image
 FROM ubuntu:22.04
 
-# Set environment variables to minimise interaction during installation
+# Set environment variables to minimize interaction during installation
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
+ENV CC=/usr/bin/gcc
+ENV CXX=/usr/bin/g++
 
 # Install core development tools and dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
-    gcc \
-    g++ \
+    gcc-11 \
+    g++-11 \
     cmake \
     pkg-config \
     libglib2.0-dev \
@@ -30,6 +32,13 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Set GCC/G++ version explicitly
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100
+
+# Verify versions
+RUN gcc --version && g++ --version && cmake --version
+
 # Set the working directory
 WORKDIR /usr/src/SubZero
 
@@ -42,8 +51,8 @@ RUN chmod +x tools/gen-version-file \
     tools/gen-test-proto \
     tools/fix/fixdialectc
 
-# Build the project using CMake
-RUN cmake -S . -B build
+# Build the project using CMake with verbose output
+RUN cmake -S . -B build -G "Unix Makefiles" -DCMAKE_CXX_STANDARD=20 -DCMAKE_CXX_STANDARD_REQUIRED=ON
 RUN cmake --build build
 
 # Run tests
