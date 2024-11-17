@@ -27,11 +27,18 @@ jobs:
             libxml2-dev \
             libncurses5-dev \
             libevent-dev \
-            zlib1g-dev
+            zlib1g-dev \
+            python3 \
+            python3-pip \
+            xxd \
+            grep \
+            findutils \
+            sed \
+            gawk
 
       - name: Configure and Build
         run: |
-          cmake -S . -B build &&
+          cmake -S . -B build -DCMAKE_EXE_LINKER_FLAGS="-lm" &&
           cmake --build build
             
   # Docker Build and Test Job
