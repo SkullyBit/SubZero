@@ -1,0 +1,19 @@
+{
+    "name": "SubZero Dev Environment",
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "context": ".."
+    },
+    "features": {},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
+                "GitHub.vscode-github-actions"
+            ]
+        }
+    },
+    "postCreateCommand": "cmake -S . -B build",
+    "remoteUser": "root"
+}
