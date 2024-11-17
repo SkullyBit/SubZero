@@ -10,10 +10,16 @@
             "extensions": [
                 "ms-vscode.cpptools",
                 "ms-vscode.cmake-tools",
-                "GitHub.vscode-github-actions"
-            ]
+                "GitHub.vscode-github-actions",
+                "ms-python.python"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/venv/bin/python",
+                "python.venvPath": "/venv",
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
         }
     },
-    "postCreateCommand": "cmake -S . -B build",
+    "postCreateCommand": "python3 -m venv /venv && source /venv/bin/activate && pip install --no-cache-dir pytest pyyaml && cmake -S . -B build",
     "remoteUser": "root"
 }

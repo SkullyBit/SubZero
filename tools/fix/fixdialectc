@@ -11,7 +11,7 @@ parser.add_argument('--source-path', help="output source path")
 
 args = parser.parse_args()
 
-data = yaml.load(open(args.input_file, 'r'))
+data = yaml.load(open(args.input_file, 'r'), Loader=yaml.SafeLoader)
 
 name = data["name"]
 base_protocol = data["base_protocol"]

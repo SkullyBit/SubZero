@@ -7,6 +7,8 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV CC=/usr/bin/gcc
 ENV CXX=/usr/bin/g++
+ENV VIRTUAL_ENV=/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install core development tools and dependencies
 RUN apt-get update && apt-get install -y \
@@ -22,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     python3 \
     python3-pip \
+    python3-venv \
     python3-yaml \
     git \
     xxd \
@@ -42,6 +45,12 @@ RUN gcc --version && g++ --version && cmake --version
 # Set the working directory
 WORKDIR /usr/src/SubZero
 
+# Create and activate a Python virtual environment
+RUN python3 -m venv $VIRTUAL_ENV
+
+# Install Python dependencies into the virtual environment
+RUN pip install --no-cache-dir pytest pyyaml
+
 # Copy the entire project into the container, excluding files in .dockerignore
 COPY . .
 
@@ -51,11 +60,14 @@ RUN chmod +x tools/gen-version-file \
     tools/gen-test-proto \
     tools/fix/fixdialectc
 
+# Add virtual environment activation to bashrc
+RUN echo "source $VIRTUAL_ENV/bin/activate" >> ~/.bashrc
+
 # Build the project using CMake with verbose output
 RUN cmake -S . -B build -G "Unix Makefiles" -DCMAKE_CXX_STANDARD=20 -DCMAKE_CXX_STANDARD_REQUIRED=ON
 RUN cmake --build build
 
-# Run tests
+# Run C++ tests
 RUN cd build && ctest --output-on-failure
 
 # Default command when the container is run
